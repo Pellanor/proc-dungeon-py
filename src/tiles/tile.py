@@ -21,6 +21,6 @@ class Tile:
 class Wall(Tile):
     def __init__(self):
         self.val = '.'
-        self.colour = (0.0, 0.0, 0.0, 0.0)
+        self.colour = [0.0, 0.0, 0.0, 0.0]
         self.draw_me = True
         self.is_wall = True

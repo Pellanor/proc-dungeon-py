@@ -1,6 +1,6 @@
 import world
 from tiles import tile
-import noise
+import my_noise as mn
 
 
 class CrevasseTile(tile.Tile):
@@ -15,7 +15,7 @@ def make_crevasse(the_map: world.Map):
     h = the_map.height
     w = the_map.width
     for y in range(h):
-        the_noise = (1 + noise.snoise2(the_map.seed, y, 5)) / 4.0 * w  # Output from 0 to width/2
+        the_noise = mn.simplex_noise_1d(y, the_map.seed) * (w / 2)  # Output from 0 to width/2
         border = (w - the_noise) / 2.0  # Space on either side of the crevice
         for x in range(w):
             if border < x < w - border:

@@ -6,6 +6,7 @@ import numpy as np
 from vispy import app
 from vispy import gloo
 
+import map_noise as mn
 import cellular_automata as ca
 from tiles import resource, fort
 
@@ -34,25 +35,26 @@ void main()
 """
 
 events.append(process_time())
-print("Gloo Setup {}s, {}s total".format(str(events[-1]-events[-2]), str(events[-1]-start)))
+print("Gloo Setup {}s, {}s total".format(str(events[-1] - events[-2]), str(events[-1] - start)))
 start = process_time()
 program = gloo.Program(vertex_shader, fragment_shader)
 map_vertices = []
 map_colours = []
 
 events.append(process_time())
-print("Start Map {}s, {}s total".format(str(events[-1]-events[-2]), str(events[-1]-start)))
-m = ca.CAMap(100, 100).init(0.45).mutate(5, 0, True, 4).mutate(5, -1, True, 2)
+print("Start Map {}s, {}s total".format(str(events[-1] - events[-2]), str(events[-1] - start)))
+m = ca.CAMap(256, 256).init(0.45).mutate(5, 0, True, 4).mutate(5, -1, True, 2)
 m = resource.add_resources(m)
 m = fort.add_forts(m)
+# m = mn.RadialColourNoiseMap(256, 256).add_noise()
 events.append(process_time())
-print("End Map {}s, {}s total".format(str(events[-1]-events[-2]), str(events[-1]-start)))
+print("End Map {}s, {}s total".format(str(events[-1] - events[-2]), str(events[-1] - start)))
 
 offset = max(m.width, m.height) / 2.0
 step = 1.0 / offset
 
 events.append(process_time())
-print("Start Vertex Construction {}s, {}s total".format(str(events[-1]-events[-2]), str(events[-1]-start)))
+print("Start Vertex Construction {}s, {}s total".format(str(events[-1] - events[-2]), str(events[-1] - start)))
 for x, y in itertools.product(range(m.width), range(m.height)):
     if m.get(x, y).draw_me:
         colour = m.get(x, y).colour
@@ -71,7 +73,7 @@ for x, y in itertools.product(range(m.width), range(m.height)):
         map_colours.append(colour)
 
 events.append(process_time())
-print("End Vertex Construction {}s, {}s total".format(str(events[-1]-events[-2]), str(events[-1]-start)))
+print("End Vertex Construction {}s, {}s total".format(str(events[-1] - events[-2]), str(events[-1] - start)))
 
 program['a_position'] = np.array(
         [tuple(((v[0] - offset) * step, (v[1] - offset) * step)) for v in map_vertices]).astype(np.float32)
@@ -94,7 +96,8 @@ c.show()
 app.run()
 
 events.append(process_time())
-print("Run All The Things {}s, {}s total".format(str(events[-1]-events[-2]), str(events[-1]-start)))
+print("Run All The Things {}s, {}s total".format(str(events[-1] - events[-2]), str(events[-1] - start)))
+
 
 def make_noise():
     vertices_data = []
