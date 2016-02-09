@@ -43,7 +43,7 @@ map_colours = []
 
 events.append(process_time())
 print("Start Map {}s, {}s total".format(str(events[-1] - events[-2]), str(events[-1] - start)))
-m = ca.CAMap(256, 256).init(0.45).mutate(5, 0, True, 4).mutate(5, -1, True, 2)
+m = ca.CAMap(50, 50).init(0.45).mutate(5, 0, True, 4).mutate(5, -1, True, 2)
 m = resource.add_resources(m)
 m = fort.add_forts(m)
 # m = mn.RadialColourNoiseMap(256, 256).add_noise()
